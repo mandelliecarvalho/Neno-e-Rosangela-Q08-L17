@@ -133,6 +133,19 @@ body{font-family:'Barlow',sans-serif;background:#f0ece5;color:#1a1816;font-size:
   .sec-h{flex-direction:column;align-items:flex-start}
   .d-btn{margin-left:0}
 }
+
+/* CRONOGRAMA */
+.cw{display:flex;flex-direction:column}
+.crow{display:flex;gap:22px}
+.csp{display:flex;flex-direction:column;align-items:center;width:14px;flex-shrink:0}
+.cd{width:12px;height:12px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.cd.done{background:#8B2E1A}
+.cd.current{background:#faf8f5;border:3px solid #8B2E1A;box-shadow:0 0 0 3px rgba(139,46,26,0.15)}
+.cd.future{background:#faf8f5;border:1px solid rgba(26,24,22,0.18)}
+.cl{flex:1;width:1px;background:rgba(26,24,22,0.18);margin:4px 0;min-height:28px}
+.cb{flex:1;padding-bottom:2rem}
+.cf{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;color:#1a1816;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.cp{font-size:11px;font-weight:300;color:#8a8278;margin-bottom:9px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -208,6 +221,14 @@ body{font-family:'Barlow',sans-serif;background:#f0ece5;color:#1a1816;font-size:
       </div>
       <div class="pl" id="proj-list"></div>
     </div>
+
+    <div class="sec">
+      <div class="sec-h">
+        <div class="sec-t">Cronograma de Projetos</div>
+        <div class="sec-m" id="crono-rev"></div>
+      </div>
+      <div class="cw" id="crono-list"></div>
+    </div>
   </div>
 
   <div class="ft">
@@ -247,6 +268,13 @@ var CLIENTES = [
       {nome:'Projeto Hidraulico',      icon:'hid', status:'Em desenvolvimento', tag:'current', url:''},
       {nome:'Projeto Luminotecnico',   icon:'luz', status:'Em desenvolvimento', tag:'current', url:''},
       {nome:'Projeto Eletrico',        icon:'ele', status:'Em desenvolvimento', tag:'current', url:''}
+    ],
+    cronoRev: 'Rev 00 - 09/03/2026',
+    cronograma: [
+      {fase:'Arquitetonico',             periodo:'Marco (S1 a S2) Desenvolvimento / Marco (S4) Finalizado',                     status:'done'},
+      {fase:'Estrutural',                periodo:'Abril (S1) Pre Formas e Compatibilizacao / Abril (S4) Finalizado',             status:'done'},
+      {fase:'Hidraulico',                periodo:'Abril (S4) Desenvolvimento e Compatibilizacao / Maio (S4) Finalizado',         status:'current'},
+      {fase:'Eletrico / Comunicacao',    periodo:'Abril (S4) Desenvolvimento e Compatibilizacao / Maio (S4) Finalizado',         status:'current'}
     ]
   }
 ];
@@ -304,6 +332,19 @@ function carregar(c) {
     pl.appendChild(el2);
   }
   document.getElementById('proj-ct').textContent=c.projetos.length+' projetos';
+
+  document.getElementById('crono-rev').textContent=c.cronoRev||'';
+  var cl=document.getElementById('crono-list');
+  cl.innerHTML='';
+  var lbl={done:'Concluido',current:'Em andamento',future:'Previsto'};
+  for(var k=0;k<c.cronograma.length;k++){
+    var et=c.cronograma[k];
+    var last=k===c.cronograma.length-1;
+    var div=document.createElement('div');
+    div.className='crow';
+    div.innerHTML='<div class="csp"><div class="cd '+et.status+'"></div>'+(last?'':'<div class="cl"></div>')+'</div><div class="cb"><div class="cf">'+et.fase+'</div><div class="cp">'+et.periodo+'</div><span class="sp '+et.status+'">'+lbl[et.status]+'</span></div>';
+    cl.appendChild(div);
+  }
 
   document.getElementById('S-login').style.display='none';
   document.getElementById('S-portal').style.display='block';
